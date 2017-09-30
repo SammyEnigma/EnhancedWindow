@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 #include <QTabBar>
 #include <QStackedWidget>
+#include <QBitmap>
 
 #include "Tab.h"
 
@@ -32,6 +33,8 @@ private:
     QVBoxLayout* _centralLayout;
 
     QPoint _grabPos;
+
+    QColor _windowColor;
 
     static const size_t MARGIN = 1;
 

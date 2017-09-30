@@ -5,7 +5,8 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      _windowColor("#2a579a")
 {
     setWindowFlags(windowFlags() | Qt::CustomizeWindowHint);
     setMinimumSize(640, 480);
@@ -13,12 +14,33 @@ MainWindow::MainWindow(QWidget *parent)
     _titleLabel = new QLabel("EnhancedWindow");
     _titleLabel->setAlignment(Qt::AlignCenter);
 
-    QPushButton* _minimizeBtn = new QPushButton(style()->standardIcon(QStyle::SP_TitleBarMinButton), "");
+    QBitmap mask;
+    QPixmap pxp;
+
+    pxp = style()->standardIcon(QStyle::SP_TitleBarMinButton).pixmap(32, 32);
+    mask = pxp.createMaskFromColor(Qt::transparent);
+    pxp.fill(Qt::white);
+    pxp.setMask(mask);
+    QIcon minimizeIcon = pxp;
+
+    pxp = style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(32, 32);
+    mask = pxp.createMaskFromColor(Qt::transparent);
+    pxp.fill(Qt::white);
+    pxp.setMask(mask);
+    QIcon maximizeIcon = pxp;
+
+    pxp = style()->standardIcon(QStyle::SP_TitleBarCloseButton).pixmap(32, 32);
+    mask = pxp.createMaskFromColor(Qt::transparent);
+    pxp.fill(Qt::white);
+    pxp.setMask(mask);
+    QIcon closeIcon = pxp;
+
+    QPushButton* _minimizeBtn = new QPushButton(minimizeIcon, "");
     _minimizeBtn->setFlat(true);
     _minimizeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     connect(_minimizeBtn, &QPushButton::clicked, this, &QMainWindow::showMinimized);
 
-    QPushButton* _maximizeBtn = new QPushButton(style()->standardIcon(QStyle::SP_TitleBarMaxButton), "");
+    QPushButton* _maximizeBtn = new QPushButton(maximizeIcon, "");
     _maximizeBtn->setFlat(true);
     _maximizeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     connect(_maximizeBtn, &QPushButton::clicked, [=] () {
@@ -27,13 +49,13 @@ MainWindow::MainWindow(QWidget *parent)
         mouseDoubleClickEvent(nullptr);
     });
 
-    QPushButton* _closeBtn = new QPushButton(style()->standardIcon(QStyle::SP_TitleBarCloseButton), "");
+    QPushButton* _closeBtn = new QPushButton(closeIcon, "");
     _closeBtn->setFlat(true);
     _closeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     connect(_closeBtn, &QPushButton::clicked, qApp, &QApplication::quit);
 
     _titleWidget = new QWidget;
-    _titleWidget->setStyleSheet("background: #4b6cb7;");
+    _titleWidget->setStyleSheet("color: white; font-weight: bold; background: "+_windowColor.name(QColor::HexArgb)+";");
     QHBoxLayout* _titleLayout = new QHBoxLayout;
     _titleLayout->setSpacing(0);
     _titleLayout->setMargin(0);
@@ -45,14 +67,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     _tabWidget = new QTabBar;
     _tabWidget->setDrawBase(false);
-    _tabWidget->setStyleSheet("QTabBar { background: #4b6cb7; border: none; }"
-                              "QTabBar::tab { border: none; padding: 4px; }"
-                              "QTabBar::tab:selected { background: "+style()->standardPalette().midlight().color().name(QColor::HexArgb)+"; }");
+    _tabWidget->setStyleSheet("QTabBar { background: "+_windowColor.name(QColor::HexArgb)+"; border: none; }"
+                              "QTabBar::tab { color: white; font-weight: bold; border: none; padding: 4px; }"
+                              "QTabBar::tab:selected { color: "+_windowColor.name(QColor::HexArgb)+"; background: "+style()->standardPalette().midlight().color().name(QColor::HexArgb)+"; }");
     _tabWidget->setExpanding(false);
 
     _stackedWidget = new QStackedWidget;
     _stackedWidget->setMinimumHeight(50);
-    _stackedWidget->setContentsMargins(1,1,1,1);
+    _stackedWidget->setContentsMargins(0,2,0,2);
     _stackedWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
     connect(_tabWidget, &QTabBar::currentChanged, _stackedWidget, &QStackedWidget::setCurrentIndex);
