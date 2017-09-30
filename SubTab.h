@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QStyle>
+#include <QPalette>
 
 class SubTab : public QWidget
 {

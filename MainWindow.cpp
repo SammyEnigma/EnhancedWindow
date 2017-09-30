@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     _stackedWidget = new QStackedWidget;
     _stackedWidget->setMinimumHeight(50);
+    _stackedWidget->setContentsMargins(1,1,1,1);
+    _stackedWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
     connect(_tabWidget, &QTabBar::currentChanged, _stackedWidget, &QStackedWidget::setCurrentIndex);
 

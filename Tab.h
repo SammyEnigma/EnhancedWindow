@@ -2,6 +2,8 @@
 #define TAB_H
 
 #include <QWidget>
+#include <QPainter>
+#include <QStyleOption>
 
 #include "SubTab.h"
 
@@ -15,14 +17,15 @@ private:
     QHBoxLayout* _layout;
 
 protected:
+    void paintEvent(QPaintEvent* event);
 
 public:
     Tab(QWidget* parent = nullptr);
 
     SubTab* insertSubTab(const QString& text, int pos = -1);
-    void insertSubTab(SubTab* tab, int pos = -1);
+    void insertSubTab(SubTab* subtab, int pos = -1);
     void removeSubTab(int pos);
-    void removeSubTab(SubTab* tab);
+    void removeSubTab(SubTab* subtab);
     SubTab*subTabAt(int pos);
 
 signals:

@@ -6,7 +6,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     MainWindow w;
-    w.insertTab("Test1")->insertSubTab("SubTab 1");
+    Tab* tab1 = w.insertTab("Test1");
+    tab1->insertSubTab("SubTab 1a");
+    tab1->insertSubTab("SubTab 1b");
+    tab1->insertSubTab("SubTab 1c");
     w.insertTab("Test2")->insertSubTab("SubTab 2");
     w.insertTab("Test3")->insertSubTab("SubTab 3");
     w.show();
