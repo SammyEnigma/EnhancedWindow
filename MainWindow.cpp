@@ -43,18 +43,17 @@ MainWindow::MainWindow(QWidget *parent)
     _titleLayout->addWidget(_closeBtn);
     _titleWidget->setLayout(_titleLayout);
 
-    QTabBar* _tabWidget = new QTabBar;
+    _tabWidget = new QTabBar;
     _tabWidget->setDrawBase(false);
     _tabWidget->setStyleSheet("QTabBar { background: #4b6cb7; border: none; }"
                               "QTabBar::tab { border: none; padding: 4px; }"
                               "QTabBar::tab:selected { background: "+style()->standardPalette().midlight().color().name(QColor::HexArgb)+"; }");
     _tabWidget->setExpanding(false);
-    _tabWidget->addTab("Test1");
-    _tabWidget->addTab("Test2");
-    _tabWidget->addTab("Test3");
 
-    QStackedWidget* _stackedWidget = new QStackedWidget;
+    _stackedWidget = new QStackedWidget;
     _stackedWidget->setMinimumHeight(50);
+
+    connect(_tabWidget, &QTabBar::currentChanged, _stackedWidget, &QStackedWidget::setCurrentIndex);
 
     QWidget* _barWidget = new QWidget;
     QHBoxLayout* _barLayout = new QHBoxLayout;
@@ -63,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     _barLayout->addWidget(_tabWidget, 1);
     _barWidget->setLayout(_barLayout);
 
-    QWidget* _mainWidget = new QWidget;
+    _mainWidget = new QWidget;
     _mainWidget->setStyleSheet("background: white; border: 1px solid lightgray; ");
 
     QWidget* _centralWidget = new QWidget;
@@ -78,9 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setContentsMargins(MARGIN,MARGIN,MARGIN,MARGIN);
 
-    setCentralWidget(_centralWidget);
-
-    setStatusBar(new QStatusBar());
+    QMainWindow::setCentralWidget(_centralWidget);
 }
 
 MainWindow::~MainWindow()
@@ -88,18 +85,27 @@ MainWindow::~MainWindow()
 
 }
 
+bool MainWindow::event(QEvent *event)
+{
+    if(event->type() == QEvent::WindowStateChange)
+    {
+        if(windowState() == Qt::WindowMaximized)
+            setContentsMargins(0,0,0,0);
+        else
+            setContentsMargins(MARGIN,MARGIN,MARGIN,MARGIN);
+
+        return true;
+    }
+
+    return QMainWindow::event(event);
+}
+
 void MainWindow::mouseDoubleClickEvent(QMouseEvent* event)
 {
     if(windowState() != Qt::WindowMaximized)
-    {
-        setContentsMargins(MARGIN,MARGIN,MARGIN,MARGIN);
         setWindowState(Qt::WindowMaximized);
-    }
     else
-    {
-        setContentsMargins(MARGIN,MARGIN,MARGIN,MARGIN);
         setWindowState(Qt::WindowNoState);
-    }
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* event)
@@ -138,4 +144,55 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
     setCursor(Qt::ArrowCursor);
     _grabPos = QPoint();
     event->accept();
+}
+
+Tab* MainWindow::insertTab(const QString& text, int pos)
+{
+    _tabWidget->addTab(text);
+    Tab* tab = new Tab;
+    _stackedWidget->insertWidget(pos < 0 ? _stackedWidget->count() : pos, tab);
+    return tab;
+}
+
+void MainWindow::insertTab(const QString& text, Tab* tab, int pos)
+{
+    _tabWidget->addTab(text);
+    _stackedWidget->insertWidget(pos < 0 ? _stackedWidget->count() : pos, tab);
+}
+
+void MainWindow::removeTab(int pos)
+{
+    if(pos < 0)
+        return;
+
+    _tabWidget->removeTab(pos);
+    _stackedWidget->removeWidget(_stackedWidget->widget(pos));
+}
+
+void MainWindow::removeTab(Tab* tab)
+{
+    _tabWidget->removeTab(_stackedWidget->indexOf(tab));
+    _stackedWidget->removeWidget(tab);
+}
+
+Tab* MainWindow::tabAt(int pos)
+{
+    return qobject_cast<Tab*>(_stackedWidget->widget(pos));
+}
+
+QWidget* MainWindow::mainWidget() const
+{
+    return _mainWidget;
+}
+
+void MainWindow::setMainWidget(QWidget* w)
+{
+    if(_mainWidget)
+    {
+        _centralLayout->removeWidget(_mainWidget);
+        _mainWidget->deleteLater();
+    }
+
+    w->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    _centralLayout->addWidget(w);
 }
