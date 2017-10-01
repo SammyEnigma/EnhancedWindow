@@ -2,10 +2,10 @@
 
 #include <QApplication>
 
-#include <QtDebug>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
+      _titleBarWidget(nullptr),
+      _extraBarWidget(nullptr),
       _windowColor("#2a579a")
 {
     setWindowFlags(windowFlags() | Qt::CustomizeWindowHint);
@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     _titleWidget = new QWidget;
     _titleWidget->setStyleSheet("color: white; font-weight: bold; background: "+_windowColor.name(QColor::HexArgb)+";");
-    QHBoxLayout* _titleLayout = new QHBoxLayout;
+    _titleLayout = new QHBoxLayout;
     _titleLayout->setSpacing(0);
     _titleLayout->setMargin(0);
     _titleLayout->addWidget(_titleLabel, 1);
@@ -80,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(_tabWidget, &QTabBar::currentChanged, _stackedWidget, &QStackedWidget::setCurrentIndex);
 
     QWidget* _barWidget = new QWidget;
-    QHBoxLayout* _barLayout = new QHBoxLayout;
+    _barLayout = new QHBoxLayout;
     _barLayout->setSpacing(0);
     _barLayout->setMargin(0);
     _barLayout->addWidget(_tabWidget, 1);
@@ -219,4 +219,48 @@ void MainWindow::setMainWidget(QWidget* w)
 
     w->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     _centralLayout->addWidget(w);
+    _mainWidget = w;
+}
+
+void MainWindow::setExtraBarWidget(QWidget* extraBarWidget)
+{
+    if(_extraBarWidget)
+    {
+        _barLayout->removeWidget(_extraBarWidget);
+        _extraBarWidget->deleteLater();
+    }
+
+    if(extraBarWidget)
+    {
+        _barLayout->addWidget(extraBarWidget);
+        _extraBarWidget = extraBarWidget;
+    }
+    else
+    {
+        _extraBarWidget = nullptr;
+    }
+}
+
+void MainWindow::setTitleBarWidget(QWidget* titleBarWidget)
+{
+    if(_titleBarWidget)
+    {
+        _titleLayout->removeWidget(_titleBarWidget);
+        _titleBarWidget->deleteLater();
+    }
+
+    if(titleBarWidget)
+    {
+        _titleLayout->insertWidget(0, titleBarWidget);
+        _titleBarWidget = titleBarWidget;
+    }
+    else
+    {
+        _titleBarWidget = nullptr;
+    }
+}
+
+void MainWindow::setWindowTitle(const QString& title)
+{
+    _titleLabel->setText(title);
 }

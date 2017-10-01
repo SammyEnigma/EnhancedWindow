@@ -5,6 +5,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    Tab.cpp \
+    SubTab.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    Tab.h \
+    SubTab.h

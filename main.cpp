@@ -1,6 +1,10 @@
 #include "MainWindow.h"
 #include <QApplication>
 
+#include <QLineEdit>
+#include <QToolButton>
+#include <QAction>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -14,6 +18,14 @@ int main(int argc, char *argv[])
     w.insertTab("Test3")->insertSubTab("SubTab 3");
     w.show();
     //w.setMainWidget(new QPushButton("Main Widget"));
+    w.setExtraBarWidget(new QLineEdit("Text"));
+    QToolButton* toolBtn = new QToolButton;
+    toolBtn->setAutoRaise(true);
+    toolBtn->setDefaultAction(new QAction(QIcon::fromTheme("folder"), "Action 1"));
+    toolBtn->setPopupMode(QToolButton::MenuButtonPopup);
+    toolBtn->addAction(new QAction("Action 2"));
+    toolBtn->addAction(new QAction("Action 3"));
+    w.setTitleBarWidget(toolBtn);
 
     return a.exec();
 }

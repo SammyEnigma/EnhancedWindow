@@ -23,9 +23,14 @@ private:
     void setCentralWidget(QWidget* w) { QMainWindow::setCentralWidget(w); }
 
     QWidget* _titleWidget;
+    QHBoxLayout* _titleLayout;
+    QWidget* _titleBarWidget;
     QLabel* _titleLabel;
 
     QTabBar* _tabWidget;
+    QWidget* _extraBarWidget;
+    QHBoxLayout* _barLayout;
+
     QStackedWidget* _stackedWidget;
 
     QWidget* _mainWidget;
@@ -59,6 +64,10 @@ public:
     QWidget* mainWidget() const;
     void setMainWidget(QWidget* w);
 
+    void setExtraBarWidget(QWidget* extraBarWidget);
+    void setTitleBarWidget(QWidget* titleBarWidget);
+
+    void setWindowTitle(const QString& title);
 };
 
 #endif // MAINWINDOW_H
