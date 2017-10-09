@@ -1,9 +1,9 @@
 #ifndef TAB_H
 #define TAB_H
 
-#include <QWidget>
-#include <QPainter>
-#include <QStyleOption>
+#include <QScrollBar>
+#include <QScrollArea>
+#include <QPushButton>
 
 #include "SubTab.h"
 
@@ -14,10 +14,13 @@ class Tab : public QWidget
 private:
     Q_DISABLE_COPY(Tab)
 
-    QHBoxLayout* _layout;
+    QHBoxLayout* _subsLayout;
+    QScrollArea* _scrollArea;
+    QPushButton* _leftBtn;
+    QPushButton* _rightBtn;
 
 protected:
-    void paintEvent(QPaintEvent* event);
+    void resizeEvent(QResizeEvent* event);
 
 public:
     Tab(QWidget* parent = nullptr);

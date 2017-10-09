@@ -12,8 +12,15 @@ int main(int argc, char *argv[])
     MainWindow w;
     Tab* tab1 = w.insertTab("Test1");
     tab1->insertSubTab(new SubTab("SubTab 1a", new QPushButton("TESTITEMS")));
-    tab1->insertSubTab("SubTab 1b");
+    tab1->insertSubTab(new SubTab("SubTab 1b", new QLabel("TESTITEMS")));
     tab1->insertSubTab("SubTab 1c");
+    tab1->insertSubTab("SubTab 1d");
+    tab1->insertSubTab("SubTab 1e");
+    tab1->insertSubTab("SubTab 1f");
+    tab1->insertSubTab("SubTab 1g");
+    tab1->insertSubTab("SubTab 1h");
+    tab1->insertSubTab("SubTab 1i");
+    tab1->insertSubTab("SubTab 1j");
     w.insertTab("Test2")->insertSubTab("SubTab 2");
     w.insertTab("Test3")->insertSubTab("SubTab 3");
     w.show();

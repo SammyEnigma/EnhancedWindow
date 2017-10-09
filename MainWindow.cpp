@@ -75,11 +75,12 @@ MainWindow::MainWindow(QWidget *parent)
     _stackedWidget = new QStackedWidget;
     _stackedWidget->setMinimumHeight(50);
     _stackedWidget->setContentsMargins(0,2,0,2);
-    _stackedWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
+    _stackedWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     connect(_tabWidget, &QTabBar::currentChanged, _stackedWidget, &QStackedWidget::setCurrentIndex);
 
     QWidget* _barWidget = new QWidget;
+    _barWidget->setStyleSheet("border: none; color: white; background: "+_windowColor.darker(120).name(QColor::HexArgb)+";");
     _barLayout = new QHBoxLayout;
     _barLayout->setSpacing(0);
     _barLayout->setMargin(0);
@@ -87,7 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     _barWidget->setLayout(_barLayout);
 
     _mainWidget = new QWidget;
-    _mainWidget->setStyleSheet("background: white; border: 1px solid lightgray; ");
+    _mainWidget->setStyleSheet(".QWidget { background: white; border: 1px solid lightgray; }");
 
     QWidget* _centralWidget = new QWidget;
     _centralLayout = new QVBoxLayout;
