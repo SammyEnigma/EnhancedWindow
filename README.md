@@ -1,2 +1,2 @@
 # EnhancedWindow
-Enhanced Qt WIndow (MS Style)
+Enhanced Qt Window (MS Style)
