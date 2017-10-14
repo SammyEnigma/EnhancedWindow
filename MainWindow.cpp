@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     QPushButton* _maximizeBtn = new QPushButton(maximizeIcon, "");
     _maximizeBtn->setFlat(true);
     _maximizeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    connect(_maximizeBtn, &QPushButton::clicked, [=] () {
+    connect(_maximizeBtn, &QPushButton::clicked, this, [=] () {
         raise();
 
         mouseDoubleClickEvent(nullptr);

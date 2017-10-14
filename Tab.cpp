@@ -23,23 +23,23 @@ Tab::Tab(QWidget* parent) : QWidget(parent)
 
     _leftBtn = new QPushButton(style()->standardIcon(QStyle::SP_ArrowLeft), "");
     _leftBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
-    connect(_leftBtn, &QPushButton::clicked, [=] () {
+    connect(_leftBtn, &QPushButton::clicked, this, [=] () {
         _scrollArea->horizontalScrollBar()->setValue(_scrollArea->horizontalScrollBar()->value()-50);
     });
     _leftBtn->setVisible(false);
 
     _rightBtn = new QPushButton(style()->standardIcon(QStyle::SP_ArrowRight), "");
     _rightBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
-    connect(_rightBtn, &QPushButton::clicked, [=] () {
+    connect(_rightBtn, &QPushButton::clicked, this, [=] () {
         _scrollArea->horizontalScrollBar()->setValue(_scrollArea->horizontalScrollBar()->value()+50);
     });
     _rightBtn->setVisible(false);
 
     _leftBtn->setDisabled(true);
-    connect(_scrollArea->horizontalScrollBar(), &QScrollBar::valueChanged, [=] (int value) {
+    connect(_scrollArea->horizontalScrollBar(), &QScrollBar::valueChanged, this, [=] (int value) {
         _leftBtn->setDisabled(value == _scrollArea->horizontalScrollBar()->minimum());
     });
-    connect(_scrollArea->horizontalScrollBar(), &QScrollBar::valueChanged, [=] (int value) {
+    connect(_scrollArea->horizontalScrollBar(), &QScrollBar::valueChanged, this, [=] (int value) {
         _rightBtn->setDisabled(value == _scrollArea->horizontalScrollBar()->maximum());
     });
 
