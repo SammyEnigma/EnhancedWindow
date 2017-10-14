@@ -11,8 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(windowFlags() | Qt::CustomizeWindowHint);
     setMinimumSize(640, 480);
 
-    _titleLabel = new QLabel("EnhancedWindow");
+    _titleLabel = new TitleLabel("EnhancedWindow");
     _titleLabel->setAlignment(Qt::AlignCenter);
+    connect(_titleLabel, SIGNAL(doubleClicked()), this, SLOT(doubleClicked()));
 
     QBitmap mask;
     QPixmap pxp;
@@ -38,21 +39,17 @@ MainWindow::MainWindow(QWidget *parent)
     QPushButton* _minimizeBtn = new QPushButton(minimizeIcon, "");
     _minimizeBtn->setFlat(true);
     _minimizeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    connect(_minimizeBtn, &QPushButton::clicked, this, &QMainWindow::showMinimized);
+    connect(_minimizeBtn, SIGNAL(clicked(bool)), this, SLOT(showMinimized()));
 
     QPushButton* _maximizeBtn = new QPushButton(maximizeIcon, "");
     _maximizeBtn->setFlat(true);
     _maximizeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    connect(_maximizeBtn, &QPushButton::clicked, this, [=] () {
-        raise();
-
-        mouseDoubleClickEvent(nullptr);
-    });
+    connect(_maximizeBtn, SIGNAL(clicked(bool)), this, SLOT(doubleClicked()));
 
     QPushButton* _closeBtn = new QPushButton(closeIcon, "");
     _closeBtn->setFlat(true);
     _closeBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-    connect(_closeBtn, &QPushButton::clicked, qApp, &QApplication::quit);
+    connect(_closeBtn, SIGNAL(clicked(bool)), qApp, SLOT(quit()));
 
     _titleWidget = new QWidget;
     _titleWidget->setStyleSheet("color: white; font-weight: bold; background: "+_windowColor.name(QColor::HexArgb)+";");
@@ -77,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent)
     _stackedWidget->setContentsMargins(0,2,0,2);
     _stackedWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
-    connect(_tabWidget, &QTabBar::currentChanged, _stackedWidget, &QStackedWidget::setCurrentIndex);
+    connect(_tabWidget, SIGNAL(currentChanged(int)), _stackedWidget, SLOT(setCurrentIndex(int)));
 
     QWidget* _barWidget = new QWidget;
     _barWidget->setStyleSheet("border: none; color: white; background: "+_windowColor.darker(120).name(QColor::HexArgb)+";");
@@ -110,6 +107,16 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::doubleClicked()
+{
+    raise();
+
+    if(windowState() != Qt::WindowMaximized)
+        setWindowState(Qt::WindowMaximized);
+    else
+        setWindowState(Qt::WindowNoState);
+}
+
 bool MainWindow::event(QEvent *event)
 {
     if(event->type() == QEvent::WindowStateChange)
@@ -123,14 +130,6 @@ bool MainWindow::event(QEvent *event)
     }
 
     return QMainWindow::event(event);
-}
-
-void MainWindow::mouseDoubleClickEvent(QMouseEvent* event)
-{
-    if(windowState() != Qt::WindowMaximized)
-        setWindowState(Qt::WindowMaximized);
-    else
-        setWindowState(Qt::WindowNoState);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent* event)

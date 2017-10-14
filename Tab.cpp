@@ -23,25 +23,17 @@ Tab::Tab(QWidget* parent) : QWidget(parent)
 
     _leftBtn = new QPushButton(style()->standardIcon(QStyle::SP_ArrowLeft), "");
     _leftBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
-    connect(_leftBtn, &QPushButton::clicked, this, [=] () {
-        _scrollArea->horizontalScrollBar()->setValue(_scrollArea->horizontalScrollBar()->value()-50);
-    });
+    connect(_leftBtn, SIGNAL(clicked(bool)), this, SLOT(scrollLeft()));
     _leftBtn->setVisible(false);
 
     _rightBtn = new QPushButton(style()->standardIcon(QStyle::SP_ArrowRight), "");
     _rightBtn->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
-    connect(_rightBtn, &QPushButton::clicked, this, [=] () {
-        _scrollArea->horizontalScrollBar()->setValue(_scrollArea->horizontalScrollBar()->value()+50);
-    });
+    connect(_rightBtn, SIGNAL(clicked(bool)), this, SLOT(scrollRight()));
     _rightBtn->setVisible(false);
 
     _leftBtn->setDisabled(true);
-    connect(_scrollArea->horizontalScrollBar(), &QScrollBar::valueChanged, this, [=] (int value) {
-        _leftBtn->setDisabled(value == _scrollArea->horizontalScrollBar()->minimum());
-    });
-    connect(_scrollArea->horizontalScrollBar(), &QScrollBar::valueChanged, this, [=] (int value) {
-        _rightBtn->setDisabled(value == _scrollArea->horizontalScrollBar()->maximum());
-    });
+    connect(_scrollArea->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(disableLeftBtn(int)));
+    connect(_scrollArea->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(disableRightBtn(int)));
 
     QHBoxLayout* layout = new QHBoxLayout;
     layout->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -50,6 +42,26 @@ Tab::Tab(QWidget* parent) : QWidget(parent)
     layout->addWidget(_rightBtn);
     layout->setMargin(0);
     setLayout(layout);
+}
+
+void Tab::scrollLeft()
+{
+    _scrollArea->horizontalScrollBar()->setValue(_scrollArea->horizontalScrollBar()->value()+50);
+}
+
+void Tab::scrollRight()
+{
+    _scrollArea->horizontalScrollBar()->setValue(_scrollArea->horizontalScrollBar()->value()+50);
+}
+
+void Tab::disableLeftBtn(int value)
+{
+    _leftBtn->setDisabled(value == _scrollArea->horizontalScrollBar()->minimum());
+}
+
+void Tab::disableRightBtn(int value)
+{
+    _rightBtn->setDisabled(value == _scrollArea->horizontalScrollBar()->maximum());
 }
 
 void Tab::resizeEvent(QResizeEvent* event)
